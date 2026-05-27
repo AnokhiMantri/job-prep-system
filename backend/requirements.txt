@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+motor
+pymongo
+pdfplumber
+mammoth
+reportlab
+deep-translator
+SpeechRecognition
+pyjwt
+bcrypt
+google-genai
+python-multipart
+python-dotenv
+email-validator
+pydub

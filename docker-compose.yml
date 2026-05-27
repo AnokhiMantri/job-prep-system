@@ -1,0 +1,84 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: jobprep-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: job_prep_db
+    volumes:
+      - mongo_data:/data/db
+    # Uncomment to access Mongo from the host (Compass / mongosh):
+    # ports:
+    #   - "127.0.0.1:27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ── Node.js / Express backend ───────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jobprep-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGO_URI: mongodb://mongo:27017/job_prep_db
+      JWT_SECRET: ${JWT_SECRET}
+      GOOGLE_GENAI_API_KEY: ${GOOGLE_GENAI_API_KEY}
+      FRONTEND_URL: http://localhost
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - uploads_data:/app/uploads
+
+  # ── Python / FastAPI backend ────────────────────────────────────────────────
+  backend-py:
+    build:
+      context: ./backend-py
+      dockerfile: Dockerfile
+    container_name: jobprep-backend-py
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      MONGO_URI: mongodb://mongo:27017/job_prep_py_db
+      JWT_SECRET: ${JWT_SECRET}
+      GOOGLE_GENAI_API_KEY: ${GOOGLE_GENAI_API_KEY}
+      FRONTEND_URL: http://localhost
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - uploads_py_data:/app/uploads
+
+  # ── React + Vite frontend (runtime API URL injection) ───────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      # No VITE_API_URL build arg — URL is injected at container start.
+    container_name: jobprep-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      # Point the SPA at whichever backend you want it to call.
+      # Override per environment without rebuilding the image.
+      API_URL: http://localhost:3000
+    depends_on:
+      - backend
+      - backend-py
+
+volumes:
+  mongo_data:
+  uploads_data:
+  uploads_py_data:
