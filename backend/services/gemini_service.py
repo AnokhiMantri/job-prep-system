@@ -17,7 +17,11 @@ def get_gemini_client():
 # =========================================================
 # RESUME ANALYSIS
 # =========================================================
+
+import json
+
 def analyze_resume_with_gemini(resume_text: str):
+
     client = get_gemini_client()
 
     prompt = f"""
@@ -44,8 +48,9 @@ def analyze_resume_with_gemini(resume_text: str):
     """
 
     try:
+
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-2.0-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",
@@ -53,14 +58,26 @@ def analyze_resume_with_gemini(resume_text: str):
             ),
         )
 
-        return response.text
+        raw_text = response.text.strip()
 
-    except Exception:
-        return """
-        {
-            "error": "AI service is currently busy. Please try again in a few seconds."
+        parsed = json.loads(raw_text)
+
+        return json.dumps(parsed)
+
+    except Exception as e:
+
+        print("Resume Analysis Error:", e)
+
+        return {
+            "ats_score": 0,
+            "strengths": [
+                "AI service temporarily unavailable"
+            ],
+            "weaknesses": [
+                "Please try again later"
+            ],
+            "keywords": []
         }
-        """
 
 
 # =========================================================
@@ -95,7 +112,7 @@ def practice_interview(
 
     try:
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-2.0-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="text/plain",
@@ -141,7 +158,7 @@ def detect_skill_gap(
 
     try:
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-2.0-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",
@@ -206,7 +223,7 @@ def analyze_spoken_response(
 
     try:
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-2.0-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",

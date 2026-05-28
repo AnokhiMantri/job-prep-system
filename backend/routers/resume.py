@@ -5,33 +5,83 @@ from services.gemini_service import analyze_resume_with_gemini
 
 router = APIRouter()
 
+
 @router.post("/upload")
 async def upload_resume(file: UploadFile = File(...)):
+
     if not file.filename.endswith((".pdf", ".docx")):
-        raise HTTPException(status_code=400, detail="Only PDF and DOCX files are allowed.")
-    
+        raise HTTPException(
+            status_code=400,
+            detail="Only PDF and DOCX files are allowed."
+        )
+
     try:
-        # 1. Read file bytes
+        # =========================================
+        # READ FILE
+        # =========================================
+
         file_bytes = await file.read()
-        
-        # 2. Extract text using PDF/DOCX parsers
-        resume_text = process_resume_file(file.filename, file_bytes)
-        
+
+        # =========================================
+        # EXTRACT TEXT
+        # =========================================
+
+        resume_text = process_resume_file(
+            file.filename,
+            file_bytes
+        )
+
         if not resume_text.strip():
-            raise HTTPException(status_code=400, detail="Could not extract text from the file.")
-            
-        # 3. Analyze text with Gemini
-        ai_analysis_str = analyze_resume_with_gemini(resume_text)
-        
-        # Parse JSON from Gemini
-        ai_analysis = json.loads(ai_analysis_str)
-        
+            raise HTTPException(
+                status_code=400,
+                detail="Could not extract text from the file."
+            )
+
+        # =========================================
+        # GEMINI ANALYSIS
+        # =========================================
+
+        ai_analysis = analyze_resume_with_gemini(
+            resume_text
+        )
+
+        # =========================================
+        # HANDLE ERROR RESPONSE
+        # =========================================
+
+        if isinstance(ai_analysis, dict):
+            return {
+                "filename": file.filename,
+                "analysis": ai_analysis
+            }
+
+        # =========================================
+        # PARSE JSON STRING
+        # =========================================
+
+        parsed_analysis = json.loads(ai_analysis)
+
         return {
             "filename": file.filename,
-            "analysis": ai_analysis
+            "analysis": parsed_analysis
         }
-        
+
+    except json.JSONDecodeError:
+        raise HTTPException(
+            status_code=500,
+            detail="AI returned invalid JSON response."
+        )
+
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+        print("Resume Upload Error:", str(e))
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal Server Error: {str(e)}"
+        )

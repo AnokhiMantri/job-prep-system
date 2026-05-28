@@ -14,7 +14,8 @@ const Home = () => {
         background:
           'radial-gradient(circle at top left, #312e81 0%, transparent 30%), radial-gradient(circle at bottom right, #0f172a 0%, transparent 30%), #020617',
         color: 'white',
-        padding: '40px',
+        padding: '0',
+        overflowX: 'hidden',
       }}
     >
 
@@ -22,9 +23,10 @@ const Home = () => {
 
       <div
         style={{
-          maxWidth: '850px',
-          margin: '0 auto',
+          width: '100%',
+          padding: '120px 8% 80px',
           textAlign: 'center',
+          boxSizing: 'border-box',
         }}
       >
         <div
@@ -46,10 +48,12 @@ const Home = () => {
 
         <h1
           style={{
-            fontSize: '64px',
-            lineHeight: '1.1',
-            marginBottom: '24px',
+            fontSize: '72px',
+            lineHeight: '1.05',
+            marginBottom: '28px',
             fontWeight: '800',
+            maxWidth: '1100px',
+            marginInline: 'auto',
           }}
         >
           Ace Your Interviews
@@ -59,10 +63,12 @@ const Home = () => {
 
         <p
           style={{
-            fontSize: '20px',
+            fontSize: '21px',
             color: '#94a3b8',
-            lineHeight: '1.8',
-            marginBottom: '40px',
+            lineHeight: '1.9',
+            marginBottom: '45px',
+            maxWidth: '850px',
+            marginInline: 'auto',
           }}
         >
           Practice mock interviews, analyze resumes,
@@ -102,67 +108,75 @@ const Home = () => {
 
       <div
         style={{
-          marginTop: '100px',
-          display: 'grid',
-          gridTemplateColumns:
-            'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '28px',
-          maxWidth: '1200px',
-          marginInline: 'auto',
+          width: '100%',
+          padding: '0 8%',
+          boxSizing: 'border-box',
+          marginTop: '40px',
         }}
       >
-        {/* CARD 1 */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns:
+              'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '30px',
+          }}
+        >
 
-        <div style={cardStyle}>
-          <div style={iconWrapper}>
-            <FaMicrophone size={26} />
+          {/* CARD 1 */}
+
+          <div style={cardStyle}>
+            <div style={iconWrapper}>
+              <FaMicrophone size={26} />
+            </div>
+
+            <h3 style={cardTitle}>
+              AI Interview Prep
+            </h3>
+
+            <p style={cardText}>
+              Practice realistic AI-generated interview
+              questions with voice interaction and
+              intelligent feedback.
+            </p>
           </div>
 
-          <h3 style={cardTitle}>
-            AI Interview Prep
-          </h3>
+          {/* CARD 2 */}
 
-          <p style={cardText}>
-            Practice realistic AI-generated interview
-            questions with voice interaction and
-            intelligent feedback.
-          </p>
-        </div>
+          <div style={cardStyle}>
+            <div style={iconWrapper}>
+              <FaFileAlt size={26} />
+            </div>
 
-        {/* CARD 2 */}
+            <h3 style={cardTitle}>
+              Resume Analyzer
+            </h3>
 
-        <div style={cardStyle}>
-          <div style={iconWrapper}>
-            <FaFileAlt size={26} />
+            <p style={cardText}>
+              Optimize your resume for ATS systems and
+              receive personalized improvement
+              suggestions.
+            </p>
           </div>
 
-          <h3 style={cardTitle}>
-            Resume Analyzer
-          </h3>
+          {/* CARD 3 */}
 
-          <p style={cardText}>
-            Optimize your resume for ATS systems and
-            receive personalized improvement
-            suggestions.
-          </p>
-        </div>
+          <div style={cardStyle}>
+            <div style={iconWrapper}>
+              <FaChartLine size={26} />
+            </div>
 
-        {/* CARD 3 */}
+            <h3 style={cardTitle}>
+              Skill Gap Detection
+            </h3>
 
-        <div style={cardStyle}>
-          <div style={iconWrapper}>
-            <FaChartLine size={26} />
+            <p style={cardText}>
+              Compare your resume against job
+              descriptions and discover missing skills
+              instantly.
+            </p>
           </div>
 
-          <h3 style={cardTitle}>
-            Skill Gap Detection
-          </h3>
-
-          <p style={cardText}>
-            Compare your resume against job
-            descriptions and discover missing skills
-            instantly.
-          </p>
         </div>
       </div>
 
@@ -171,6 +185,7 @@ const Home = () => {
       <footer
         style={{
           marginTop: '120px',
+          paddingBottom: '40px',
           textAlign: 'center',
           color: '#64748b',
           fontSize: '15px',
@@ -187,62 +202,67 @@ const Home = () => {
 /* STYLES */
 /* ========================================= */
 
-
 const primaryButton = {
   display: 'flex',
   alignItems: 'center',
   gap: '10px',
   textDecoration: 'none',
-  padding: '16px 28px',
-  borderRadius: '14px',
+  padding: '16px 30px',
+  borderRadius: '16px',
   background:
     'linear-gradient(135deg, #6366f1, #8b5cf6)',
   color: 'white',
   fontWeight: '600',
+  fontSize: '16px',
   boxShadow:
     '0 10px 30px rgba(99,102,241,0.4)',
+  transition: '0.3s ease',
 };
 
 const secondaryButton = {
   textDecoration: 'none',
-  padding: '16px 28px',
-  borderRadius: '14px',
+  padding: '16px 30px',
+  borderRadius: '16px',
   border: '1px solid rgba(255,255,255,0.1)',
   background: 'rgba(255,255,255,0.03)',
   color: 'white',
   fontWeight: '600',
+  fontSize: '16px',
   backdropFilter: 'blur(12px)',
+  transition: '0.3s ease',
 };
 
 const cardStyle = {
-  background: 'rgba(17, 24, 39, 0.7)',
-  backdropFilter: 'blur(12px)',
+  background: 'rgba(17, 24, 39, 0.72)',
+  backdropFilter: 'blur(14px)',
   border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: '24px',
-  padding: '32px',
-  boxShadow: '0 8px 30px rgba(0,0,0,0.3)',
+  borderRadius: '28px',
+  padding: '36px',
+  boxShadow: '0 10px 40px rgba(0,0,0,0.28)',
+  transition: '0.3s ease',
 };
 
 const iconWrapper = {
-  width: '60px',
-  height: '60px',
-  borderRadius: '16px',
+  width: '68px',
+  height: '68px',
+  borderRadius: '18px',
   background:
     'linear-gradient(135deg, #6366f1, #8b5cf6)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginBottom: '22px',
+  marginBottom: '24px',
 };
 
 const cardTitle = {
-  fontSize: '22px',
+  fontSize: '24px',
   marginBottom: '14px',
 };
 
 const cardText = {
   color: '#94a3b8',
-  lineHeight: '1.8',
+  lineHeight: '1.9',
+  fontSize: '16px',
 };
 
 export default Home;
