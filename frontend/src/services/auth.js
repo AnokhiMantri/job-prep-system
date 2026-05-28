@@ -37,9 +37,14 @@ export const registerUser = async ({ name, email, password }) => {
   return response.data;
 };
 
-export const loginUser = async ({ email, password }) => {
-  const response = await api.post('/api/auth/login', { email, password });
-  saveToken(response.data.access_token);
-  if (response.data.user) saveUser(response.data.user);
+export const loginUser = async (data) => {
+  const response = await api.post('/api/auth/login', data);
+
+  // SAVE TOKEN
+  localStorage.setItem(
+    'token',
+    response.data.access_token
+  );
+
   return response.data;
 };

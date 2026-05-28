@@ -1,0 +1,15 @@
+# Environment variables
+.env
+
+# Node modules
+node_modules/
+
+# Python cache
+__pycache__/
+
+# Build folders
+dist/
+build/
+
+# VS Code
+.vscode/

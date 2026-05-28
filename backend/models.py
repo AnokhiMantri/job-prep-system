@@ -27,6 +27,11 @@ class InterviewRequest(BaseModel):
 class InterviewResponse(BaseModel):
     transcript: str
 
+class VoiceEvaluationRequest(BaseModel):
+    job_title: str
+    interview_question: str
+    user_transcription: str
+
 class SkillGapRequest(BaseModel):
     resume_text: str
     job_description: str
