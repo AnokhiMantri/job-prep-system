@@ -1,4 +1,6 @@
 import os
+import random
+from time import time
 from google import genai
 from google.genai import types
 
@@ -89,6 +91,31 @@ def practice_interview(
 ):
     client = get_gemini_client()
 
+    topics = [
+        "Data Structures",
+        "Algorithms",
+        "DBMS",
+        "SQL",
+        "Operating Systems",
+        "Computer Networks",
+        "Object Oriented Programming",
+        "Python",
+        "Java",
+        "JavaScript",
+        "React",
+        "MongoDB",
+        "FastAPI",
+        "REST APIs",
+        "System Design",
+        "Projects",
+        "Problem Solving",
+        "Behavioral Questions",
+        "Leadership",
+        "Teamwork"
+    ]
+
+    random_topic = random.choice(topics)
+
     prompt = f"""
     You are a professional technical interviewer conducting a live mock interview.
 
@@ -98,32 +125,54 @@ def practice_interview(
     Candidate Background:
     {experience_summary or 'No experience summary provided.'}
 
+    Focus Topic:
+    {random_topic}
+
     Instructions:
+
     - Ask ONLY ONE interview question.
+    - Ask a different question every time.
+    - Focus on the selected topic.
     - Keep it conversational and realistic.
     - Do NOT provide hints.
     - Do NOT provide explanations.
     - Do NOT generate multiple questions.
     - Keep the question concise.
     - Sound natural like a real interviewer.
+    - Avoid repeating common questions.
 
     Return ONLY the interview question text.
     """
 
-    try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash-lite",
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="text/plain",
-                temperature=0.5,
-            ),
-        )
+    for attempt in range(3):
 
-        return response.text.strip()
+        try:
 
-    except Exception:
-        return "AI service is currently busy. Please try again in a few seconds."
+            response = client.models.generate_content(
+                model="gemini-2.5-flash-lite",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="text/plain",
+                    temperature=1.0,
+                ),
+            )
+
+            return response.text.strip()
+
+        except Exception as e:
+
+            print(
+                f"Interview Question Error "
+                f"(Attempt {attempt + 1}/3):",
+                e
+            )
+
+            time.sleep(2)
+
+    return (
+        "Tell me about a challenging project you worked on "
+        "and explain your contribution to it."
+    )
 
 
 # =========================================================
