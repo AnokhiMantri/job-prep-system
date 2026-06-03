@@ -1,18 +1,13 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { clearToken, isAuthenticated } from '../services/auth';
 import './Navbar.scss';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [loggedIn, setLoggedIn] = useState(isAuthenticated());
 
-  useEffect(() => {
-    setLoggedIn(isAuthenticated());
-  }, [location]);
+  const loggedIn = isAuthenticated();
 
   const changeLanguage = (e) => {
     i18n.changeLanguage(e.target.value);
@@ -23,8 +18,10 @@ const Navbar = () => {
       <div className="navbar-logo">
         <Link to="/">CareerForge AI</Link>
       </div>
+
       <div className="navbar-links">
         <Link to="/dashboard">{t('dashboard')}</Link>
+
         {loggedIn ? (
           <button
             onClick={() => {
@@ -41,7 +38,12 @@ const Navbar = () => {
             <Link to="/register">{t('register')}</Link>
           </>
         )}
-        <select onChange={changeLanguage} defaultValue={i18n.language} className="lang-select">
+
+        <select
+          onChange={changeLanguage}
+          defaultValue={i18n.language}
+          className="lang-select"
+        >
           <option value="en">English</option>
           <option value="hi">हिंदी (Hindi)</option>
           <option value="mr">मराठी (Marathi)</option>
